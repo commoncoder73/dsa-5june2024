@@ -1,2 +1,5 @@
 .idea
 .gitconfig
+.vscode
+*.exe
+*out*
