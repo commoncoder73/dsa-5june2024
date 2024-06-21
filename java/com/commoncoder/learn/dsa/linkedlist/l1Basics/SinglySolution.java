@@ -5,7 +5,7 @@ public class SinglySolution {
     public static void main(String[] args) {
         SinglySolution solution = new SinglySolution();
         SinglyLinkedListNode head = null;
-        head = solution.insertAtBeg(null, 6);
+//        head = solution.insertAtBeg(null, 6);
         head = solution.insertAtBeg(head, 5);
         head = solution.insertAtBeg(head, 4);
         head = solution.insertAtBeg(head, 3);
@@ -278,7 +278,6 @@ public class SinglySolution {
             t1.setNext(t1Next);
             t1 = t1Next;
         }
-
     }
 
 }

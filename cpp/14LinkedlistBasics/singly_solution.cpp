@@ -282,6 +282,38 @@ bool isPalindrome(Node *head) {
   return isLlPalindrome;
 }
 
+// TC: O(N) SC: O(1)
+Node* insertInSortedLinkedList(Node* head, int valToInsert) {
+    Node* prev = nullptr;
+    Node* temp = head;
+    while(temp != nullptr && temp->data < valToInsert) {
+        prev = temp;
+        temp = temp->next;
+    }
+    Node* newNode = new Node(valToInsert);
+    // Insertion in empty LL or at beg.
+    if (prev == nullptr) {
+        head = newNode;
+    } else {
+        prev->next = newNode;
+    }
+    newNode->next = temp;
+}
+
+// TC: O(N) SC: O(1)
+void removeAllDuplicatesFromSortedLinkedList(Node* head) {
+    Node* temp = head;
+    while(temp != nullptr && temp->next != nullptr) {
+        if (temp->data == temp->next->data) {
+            Node* nodeToDelete = temp->next;
+            temp->next = temp->next->next;
+            delete nodeToDelete;
+        } else {
+            temp = temp->next;
+        }
+    }
+}
+
 int main() {
   Node *head = nullptr;
   Node *node = nullptr;
