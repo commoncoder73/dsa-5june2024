@@ -3,27 +3,19 @@ package com.commoncoder.learn.dsa.linkedlist.l1Basics;
 public class SinglySolution {
 
     public static void main(String[] args) {
-        SinglyLinkedListNode head;
+        SinglySolution solution = new SinglySolution();
+        SinglyLinkedListNode head = null;
+        head = solution.insertAtBeg(null, 6);
+        head = solution.insertAtBeg(head, 5);
+        head = solution.insertAtBeg(head, 4);
+        head = solution.insertAtBeg(head, 3);
+        head = solution.insertAtBeg(head, 2);
+        head = solution.insertAtBeg(head, 1);
 
-        SinglyLinkedListNode node = new SinglyLinkedListNode(2);
-        head = node;
-
-        SinglyLinkedListNode newNode = new SinglyLinkedListNode(3);
-        node.setNext(newNode); // node.next = newNode
-        node = newNode;
-
-        newNode = new SinglyLinkedListNode(4);
-        node.setNext(newNode);
-
-        SinglySolution singlySolution = new SinglySolution();
-//        solution.traversal(head);
-
-        head = singlySolution.insertAtBeg(head, 5);
-        head = singlySolution.insertAtBeg(head, 6);
-        head = singlySolution.insertAtBeg(head, 7);
-
-        singlySolution.traversal(head);
-
+        solution.traversal(head);
+        System.out.println("---");
+        solution.alternateNodes(head);
+        solution.traversal(head);
     }
 
     public void traversal(SinglyLinkedListNode head) {
@@ -40,7 +32,7 @@ public class SinglySolution {
         int count = 0;
         SinglyLinkedListNode temp = head;
         while (temp != null) {
-            count ++;
+            count++;
             temp = temp.getNext();
         }
         return count;
@@ -49,7 +41,7 @@ public class SinglySolution {
     public SinglyLinkedListNode insertAtBeg(SinglyLinkedListNode head, int valToInsert) {
         SinglyLinkedListNode newNode = new SinglyLinkedListNode(valToInsert);
         newNode.setNext(head);
-        return  newNode;
+        return newNode;
     }
 
     public SinglyLinkedListNode insertAtEnd(SinglyLinkedListNode head, int valToInsert) {
@@ -57,8 +49,8 @@ public class SinglySolution {
         if (head == null) {
             return newNode;
         }
-        SinglyLinkedListNode temp =head;
-        while (temp.getNext() !=null) {
+        SinglyLinkedListNode temp = head;
+        while (temp.getNext() != null) {
             temp = temp.getNext();
         }
         temp.setNext(newNode);
@@ -133,7 +125,7 @@ public class SinglySolution {
         }
         SinglyLinkedListNode prev = null;
         SinglyLinkedListNode temp = head;
-        while (k > 0 ) {
+        while (k > 0) {
             prev = temp;
             temp = temp.getNext();
             k--;
@@ -225,7 +217,7 @@ public class SinglySolution {
         // now we have units tens hund thous...
         int carry = 1;
         SinglyLinkedListNode temp = head;
-        while (carry != 0 && temp!=null) {
+        while (carry != 0 && temp != null) {
             int sum = temp.getData() + carry; // 1 to 10
             temp.setData(sum % 10);
             carry = sum / 10;
@@ -240,21 +232,80 @@ public class SinglySolution {
         return head;
     }
 
+
+    SinglyLinkedListNode insertInSortedLinkedList(SinglyLinkedListNode head, int valToInsert) {
+        SinglyLinkedListNode prev = null;
+        SinglyLinkedListNode temp = head;
+        // while we move out of linkedlist or we find just greater or equal element
+        while (temp != null && temp.getData() < valToInsert) {
+            prev = temp;
+            temp = temp.getNext();
+        }
+
+        SinglyLinkedListNode newNode = new SinglyLinkedListNode(valToInsert);
+        // Is this first node to be inserted
+        if (prev == null) {
+            head = newNode;
+        } else {
+            prev.setNext(newNode);
+        }
+        newNode.setNext(temp);
+        return head;
+    }
+
+
+    void removeDuplicatesFromSortedArray(SinglyLinkedListNode head) {
+        SinglyLinkedListNode temp = head;
+        while (temp != null && temp.getNext() != null) {
+            if (temp.getData() == temp.getNext().getData()) {
+                temp.setNext(temp.getNext().getNext());
+            } else {
+                temp = temp.getNext();
+            }
+        }
+    }
+
+
+    void alternateNodes(SinglyLinkedListNode head) {
+        SinglyLinkedListNode mid = middleNode(head);
+        SinglyLinkedListNode t2 = reverse(mid);
+        SinglyLinkedListNode t1 = head;
+        while (t1 != t2 && t1.getNext() != t2) {
+            SinglyLinkedListNode t1Next = t1.getNext();
+            t1.setNext(t2);
+            t2 = t2.getNext();
+            t1 = t1.getNext();
+            t1.setNext(t1Next);
+            t1 = t1Next;
+        }
+
+    }
+
 }
 
 
-
-
 /**
- *
  * Given a sorted linked list and a new value,
  * insert new value such that final linked list remains sorted.
- *
+ * <p>
  * Given a sorted linked list, remove all duplicates.
- *
+ * <p>
  * Given a linked list and a value, delete all nodes of that value.
- *
- *
+ * <p>
+ * <p>
+ * <p>
+ * Comparison with array | singly linkedlist
+ * <p>
+ * Getting nth value O(1) | O(N)
+ * Adding new value at end  O(1) (assuming enough space) | O(N)
+ * Adding new value at beginning O(N) | O(1)
+ * Adding new value in between  (N) | O(N)
+ * <p>
+ * Delete new value at end O(1) | O(N)
+ * Delete new value at beginning O(N) | O(1)
+ * Delete new value in between O(N) | O(N)
+ * <p>
+ * Linear Search O(N) | O(N)
  */
 
 /**

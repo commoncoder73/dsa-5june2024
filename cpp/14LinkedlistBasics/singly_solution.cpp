@@ -286,6 +286,42 @@ Node* getCycleStartNode(Node* head) {
     return slow;
 }
 
+Node* addOneToNumber(Node* head) {
+    head = reverseLinkedList(head);
+
+    Node* temp = head;
+    int toAdd = 1;
+    while (temp != nullptr && toAdd > 0) {
+        int sum = temp->data + toAdd;
+        temp->data = sum % 10;
+        toAdd = sum/10;
+        temp = temp->next;
+    }
+    head = reverseLinkedList(head);
+    if (toAdd > 0) {
+        return addNewNodeAtStart(head, toAdd);
+    }
+    return head;
+}
+
+bool isPalindrome(Node* head) {
+    Node* middleHead = middleNodeFastAndSlowPtr(head);
+    middleHead = reverseLinkedList(middleHead);
+    Node* temp1 = head;
+    Node* temp2 = middleHead;
+    bool isLlPalindrome = true;
+    while(temp2 != nullptr) {
+        if (temp1->data != temp2->data) {
+            isLlPalindrome = false;
+            break;
+        }
+        temp1 = temp1->next;
+        temp2 = temp2->next;
+    }
+    reverseLinkedList(middleHead);
+    return isLlPalindrome;
+}
+
 int main()
 {
     Node *head = nullptr;
