@@ -35,14 +35,13 @@ int* mergeSort(int arr[], int start, int end) {
   if (start > end) {
     return new int[0]{};
   } else if (start == end) {
-    return new int[1]{start};
+    return new int[1]{arr[start]};
   }
   int mid = (start + end) / 2;
   int len1 = mid - start + 1;
   int* sortedFirstHalf = mergeSort(arr, start, mid);
   int len2 = end - mid;
   int* sortedSecondHalf = mergeSort(arr, mid + 1, end);
-  // O(N)
   return mergeSortedArrays(sortedFirstHalf, len1, sortedSecondHalf, len2);
 }
 
