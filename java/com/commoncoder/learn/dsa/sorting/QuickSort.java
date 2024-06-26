@@ -9,6 +9,13 @@ public class QuickSort implements SortingAlgorithm {
         quickSort(arr, 0, arr.length-1);
     }
 
+    // TC:
+        // Worst case: O(N^2)
+        // Average case: O(NlogN)
+    // SC:
+        // Worst case: O(N)
+        // Average case: O(logN)
+    // Stability: unstable
     public void quickSort(int[] arr, int start, int end) {
         if(start >= end) {
             return;

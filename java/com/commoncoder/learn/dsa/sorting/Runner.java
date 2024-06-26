@@ -5,8 +5,8 @@ import java.util.Arrays;
 public class Runner {
 
     public static void main(String[] args) {
-        SortingAlgorithm sortingAlgorithm = new QuickSort();
-        int[] arr = new int[]{6, 2, -1, 3, 9, -10, 9, 97};
+        SortingAlgorithm sortingAlgorithm = new RadixSort();
+        int[] arr = new int[]{121, 432, 564, 23, 1, 45, 788};
         sortingAlgorithm.sort(arr);
         System.out.println(Arrays.toString(arr));
     }
