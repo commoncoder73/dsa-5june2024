@@ -2,21 +2,22 @@
 
 using namespace std;
 
-class Stack {
+class Queue {
 
-    Stack() {
+    Queue() {
         this->head = nullptr;
+        this->tail = nullptr;
         this->sizeVal = 0;
     }
 
 public:
-    // 5->4->2->3 
+    
     void push(int val) {
         sizeVal++;
-        insertNewValAtHead(val);
+        addNewNodeAtEnd(val);
     }
 
-    int pop() {
+    int poll() {
         if (isEmpty()) {
             throw runtime_error("Stack is empty!");
         }
@@ -24,7 +25,7 @@ public:
         return *removeFirstNode();
     }
 
-    int top() {
+    int peek() {
         if (isEmpty()) {
             throw runtime_error("Stack is empty!");
         }
@@ -59,29 +60,35 @@ private:
     };
     
     Node* head;
+    Node* tail;
     int sizeVal;
 
-    void insertNewValAtHead(int newVal) {
-        Node* newNode = new Node(newVal);
-        if (head == nullptr) {
-            this->head = newNode;
-            return;
-        }
-        newNode->next = head;
-        this->head = newNode;
-    }
+    
 
-        // 4->2->3 
     int* removeFirstNode() {
         if (head == nullptr) {
             return nullptr;
         }
         Node* nodeToDelete = head;
         this->head = this->head->next;
+        if (head == nullptr) {
+            this->tail = nullptr;
+        }
         int valDeleted = nodeToDelete->data;
         delete nodeToDelete;
         return &valDeleted;
         
+    }
+
+    void addNewNodeAtEnd(int val) {
+        Node* newNode = new Node(val);
+        if (tail == nullptr) {
+            this->head = newNode;
+            this->tail = newNode;
+            return;
+        }
+        tail->next = newNode;
+        this->tail = newNode;
     }
     
 };
