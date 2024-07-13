@@ -113,6 +113,122 @@ public class BstBasics {
         return new FloorCiel(floor, null);
     }
 
+    static class DeleteNodeInfo {
+        BinaryTreeNode nodeToBeDeleted;
+        BinaryTreeNode parentOfNodeToBeDeleted;
+        // true if node to be deleted is on left side of its parent.
+        // else if false then node to be deleted will be on right side of its parent
+        boolean isLeft;
+
+        public DeleteNodeInfo(BinaryTreeNode nodeToBeDeleted, BinaryTreeNode parentOfNodeToBeDeleted, boolean isLeft) {
+            this.nodeToBeDeleted = nodeToBeDeleted;
+            this.parentOfNodeToBeDeleted = parentOfNodeToBeDeleted;
+            this.isLeft = isLeft;
+        }
+    }
+
+
+
+    private DeleteNodeInfo searchNodeToBeDeleted(BinaryTreeNode root, int valueToBeDeleted) {
+        BinaryTreeNode checking = root;
+        BinaryTreeNode parent = null;
+        boolean isLeft = false;
+        while (checking != null && checking.data != valueToBeDeleted) {
+            parent = checking;
+            if (valueToBeDeleted < checking.data) {
+                isLeft = true;
+                checking = checking.left;
+            } else {
+                isLeft = false;
+                checking = checking.right;
+            }
+        }
+        return new DeleteNodeInfo(checking, parent, isLeft);
+    }
+
+    // TC: O(h) but in worst case, this h could be N so O(N)
+    // in avg case h would be logN
+    // SC: recursion stack uses O(h) space
+    // SC: iterative version O(1) space
+    public BinaryTreeNode deleteValueFromBst(BinaryTreeNode root, int valueToBeDeleted) {
+        if (root == null) {
+            return null;
+        }
+        DeleteNodeInfo deleteNodeInfo = searchNodeToBeDeleted(root, valueToBeDeleted);
+        // We are not able to find the node to be deleted in BST!
+        if (deleteNodeInfo.nodeToBeDeleted == null) {
+            return root;
+        }
+
+        // We have single node in BST and we are deleting that single node
+        if (deleteNodeInfo.nodeToBeDeleted == root
+                && root.left == null && root.right == null) {
+            return null;
+        }
+        deleteNode(deleteNodeInfo);
+        return root;
+
+    }
+
+    // TC: O(h) but in worst case, this h could be N so O(N)
+    // in avg case h would be logN
+    // SC: recursion stack uses O(h) space
+    // SC: iterative version O(1) space
+    private void deleteNode(DeleteNodeInfo deleteNodeInfo) {
+        while (deleteNodeInfo != null) {
+            if (deleteNodeInfo.nodeToBeDeleted.left == null && deleteNodeInfo.nodeToBeDeleted.right == null) {
+                simpleDetachNodeFromParent(deleteNodeInfo);
+                deleteNodeInfo = null;
+            } else if (deleteNodeInfo.nodeToBeDeleted.right != null) {
+                DeleteNodeInfo inorderSuccessorDeleteNodeInfo = inorderSuccessorInRightSubtree(deleteNodeInfo.nodeToBeDeleted);
+                deleteNodeInfo.nodeToBeDeleted.data = inorderSuccessorDeleteNodeInfo.nodeToBeDeleted.data;
+                deleteNodeInfo = inorderSuccessorDeleteNodeInfo;
+            } else { // deleteNodeInfo.nodeToBeDeleted.left != null
+                DeleteNodeInfo inorderPredecessorDeleteNodeInfo = inorderPredecessorInLeftSubtree(deleteNodeInfo.nodeToBeDeleted);
+                deleteNodeInfo.nodeToBeDeleted.data = inorderPredecessorDeleteNodeInfo.nodeToBeDeleted.data;
+                deleteNodeInfo = inorderPredecessorDeleteNodeInfo;
+            }
+        }
+
+    }
+
+    private void simpleDetachNodeFromParent(DeleteNodeInfo deleteNodeInfo) {
+        if (deleteNodeInfo.isLeft) {
+            deleteNodeInfo.parentOfNodeToBeDeleted.left = null;
+        } else {
+            deleteNodeInfo.parentOfNodeToBeDeleted.right = null;
+        }
+        // delete deleteNodeInfo.nodeToBeDeleted
+    }
+
+    // TC: O(h)
+    // SC: O(1)
+    private DeleteNodeInfo inorderSuccessorInRightSubtree(BinaryTreeNode startingNode) {
+        BinaryTreeNode checking = startingNode.right;
+        BinaryTreeNode parent = startingNode;
+        boolean isLeft = false;
+        while (checking.left != null) {
+            parent = checking;
+            checking = checking.left;
+            isLeft = true;
+        }
+        return new DeleteNodeInfo(checking, parent, isLeft);
+    }
+
+    // TC: O(h)
+    // SC: O(1)
+    private DeleteNodeInfo inorderPredecessorInLeftSubtree(BinaryTreeNode startingNode) {
+        BinaryTreeNode checking = startingNode.left;
+        BinaryTreeNode parent = startingNode;
+        boolean isLeft = true;
+        while (checking.right != null) {
+            parent = checking;
+            checking = checking.right;
+            isLeft = false;
+        }
+        return new DeleteNodeInfo(checking, parent, isLeft);
+    }
+
     public static void main(String[] args) {
         int[] arr = new int[]{10, 5, 8, 3, 20, 25, 16, -1, 8, 15};
         BstBasics bstBasics = new BstBasics();
@@ -122,7 +238,6 @@ public class BstBasics {
         }
         BinaryTreeTraversals binaryTreeTraversals = new BinaryTreeTraversals();
         System.out.println(binaryTreeTraversals.inorderRecursive(root));
-
     }
 
 
