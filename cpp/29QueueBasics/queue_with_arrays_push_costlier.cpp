@@ -4,23 +4,23 @@ using namespace std;
 
 class Queue {
  public:
-  // TC: O(1) SC: O(1)
-  void push(int val) { qArray.push_back(val); }
-
   // TC: O(N) SC: O(1)
+  void push(int val) { insertValueAtStart(qArray, val); }
+
+  // TC: O(1) SC: O(1)
   int poll() {
     if (isEmpty()) {
-      throw runtime_error("Stack is empty!");
+      throw runtime_error("Queue is empty!");
     }
-    qArray.erase(qArray.begin());
+    qArray.pop_back();
   }
 
   // TC: O(1) SC: O(1)
   int peek() {
     if (isEmpty()) {
-      throw runtime_error("Stack is empty!");
+      throw runtime_error("Queue is empty!");
     }
-    qArray[0];
+    qArray[size() - 1];
   }
 
   int size() { return qArray.size(); }

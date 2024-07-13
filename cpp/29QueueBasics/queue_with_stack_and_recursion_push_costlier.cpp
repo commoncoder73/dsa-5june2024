@@ -10,7 +10,7 @@ class Queue {
   // TC: O(1) SC: O(1)
   int poll() {
     if (isEmpty()) {
-      throw runtime_error("Stack is empty!");
+      throw runtime_error("Queue is empty!");
     }
     int top = mainStack.top();
     mainStack.pop();
@@ -20,7 +20,7 @@ class Queue {
   // TC: O(1) SC: O(1)
   int peek() {
     if (isEmpty()) {
-      throw runtime_error("Stack is empty!");
+      throw runtime_error("Queue is empty!");
     }
     return mainStack.top();
   }

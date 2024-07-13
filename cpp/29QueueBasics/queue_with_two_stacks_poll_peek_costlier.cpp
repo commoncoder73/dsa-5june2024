@@ -10,7 +10,7 @@ class Queue {
   // TC: O(N) SC: O(N)
   int poll() {
     if (isEmpty()) {
-      throw runtime_error("Stack is empty!");
+      throw runtime_error("Queue is empty!");
     }
     moveAllElements(mainStack, intermediateStack);
     int topValue = intermediateStack.top();
@@ -22,7 +22,7 @@ class Queue {
   // TC: O(N) SC: O(N)
   int peek() {
     if (isEmpty()) {
-      throw runtime_error("Stack is empty!");
+      throw runtime_error("Queue is empty!");
     }
     moveAllElements(mainStack, intermediateStack);
     int topValue = intermediateStack.top();

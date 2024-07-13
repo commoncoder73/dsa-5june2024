@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// TC: O(logN): SC:O(logN)
 int binarySearchRec(int arr[], int target, int start, int end) {
   if (start > end) {
     return -1;
@@ -16,6 +17,7 @@ int binarySearchRec(int arr[], int target, int start, int end) {
   }
 }
 
+// TC: O(logN): SC:O(1)
 int binarySearch(int arr[], int n, int target) {
   int start = 0;
   int end = n - 1;

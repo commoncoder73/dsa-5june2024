@@ -39,7 +39,9 @@ void reverse(queue<int>& q, int k) {
 }
 
 void reverseRec(queue<int>& q, int k) {
-    reverseKElementsAndAddAtEndOfQ(q, k);
+    // 1 2 3 4 5 6 7 8
+    // 5 4 3 2 1 6 7 8
+    reverseKElementsAndAddAtEndOfQ(q, k); //   5 4 3 2 1 6 7 8 
     moveElementsBack(q, q.size() - k);
 }
 
@@ -47,9 +49,11 @@ void reverseKElementsAndAddAtEndOfQ(queue<int>& q, int k) {
     if (k <= 0) {
         return;
     }
-    int firstVal = q.front();
+    int firstVal = q.front(); 
     q.pop();
     reverseKElementsAndAddAtEndOfQ(q, k-1);
     q.push(firstVal);
 
 }
+
+  
