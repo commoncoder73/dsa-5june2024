@@ -145,3 +145,139 @@ FloorCeil* floorCeilOfK(BinaryTreeNode* root, int k) {
   }
   return new FloorCeil(floor, nullptr);
 }
+
+class DeleteNodeInfo {
+ public:
+  BinaryTreeNode* nodeToBeDeleted;
+  BinaryTreeNode* parentOfNodeToBeDeleted;
+  // If true then node to be deleted is present on left side of the parent
+  // Else node to be deleted is present on right side of the parent
+  bool isLeft;
+
+  DeleteNodeInfo(BinaryTreeNode* nodeToBeDeleted,
+                 BinaryTreeNode* parentOfNodeToBeDeleted, bool isLeft) {
+    this->nodeToBeDeleted = nodeToBeDeleted;
+    this->parentOfNodeToBeDeleted = parentOfNodeToBeDeleted;
+    this->isLeft = isLeft;
+  }
+};
+
+DeleteNodeInfo* searchNodeToBeDeleted(BinaryTreeNode* root,
+                                      int valueToBeDeleted) {
+  BinaryTreeNode* parent = nullptr;
+  BinaryTreeNode* checking = root;
+  bool isLeft = false;
+  while (checking != nullptr && checking->data != valueToBeDeleted) {
+    parent = checking;
+    if (valueToBeDeleted < checking->data) {
+      checking = checking->left;
+      isLeft = true;
+    } else {
+      checking = checking->right;
+      isLeft = false;
+    }
+  }
+  return new DeleteNodeInfo(checking, parent, isLeft);
+}
+
+// TC: O(H) avg O(logN) worst O(N)
+// SC: recursive:  O(H) avg O(logN) worst O(N)
+// iterative: O(1)
+BinaryTreeNode* deleteValueFromBst(BinaryTreeNode* root, int valueToBeDeleted) {
+  // Empty tree
+  if (root == nullptr) {
+    return root;
+  }
+
+  DeleteNodeInfo* deleteNodeInfo =
+      searchNodeToBeDeleted(root, valueToBeDeleted);
+  // Node to be deleted not found from given BST
+  if (deleteNodeInfo->nodeToBeDeleted == nullptr) {
+    return root;
+  }
+  // We only have single node in BST and we are trying to delete that single
+  // tree
+  if (deleteNodeInfo->nodeToBeDeleted == root && root->left == nullptr &&
+      root->right == nullptr) {
+    return nullptr;
+  }
+
+  deleteNode(deleteNodeInfo);
+  return root;
+}
+
+void deleteNode(DeleteNodeInfo* deleteNodeInfo) {
+  while (deleteNodeInfo != nullptr) {
+    // Node to be deleted is not having any children
+    if (deleteNodeInfo->nodeToBeDeleted->left == nullptr &&
+        deleteNodeInfo->nodeToBeDeleted->right == nullptr) {
+      dettachFromParent(deleteNodeInfo);
+      deleteNodeInfo = nullptr;
+    }
+
+    // If left subtree is present, then we can get inorder predecessor from left
+    // subtree
+    if (deleteNodeInfo->nodeToBeDeleted->left != nullptr) {
+      // inorder predecessor will be promoted as root
+      DeleteNodeInfo* inorderPredecessorInfo =
+          inorderPredecessorInLeftSubtree(deleteNodeInfo->nodeToBeDeleted);
+      deleteNodeInfo->nodeToBeDeleted->data =
+          inorderPredecessorInfo->nodeToBeDeleted->data;
+      deleteNodeInfo = inorderPredecessorInfo;
+    }
+    // Here right subtree will be present, and hence we can get inorder
+    // successor
+    else {  // deleteNodeInfo->nodeToBeDeleted->right != nullptr
+      // inorder successor will be promoted as root
+      DeleteNodeInfo* inorderSuccessorInfo =
+          inorderSuccessorInRightSubtree(deleteNodeInfo->nodeToBeDeleted);
+      deleteNodeInfo->nodeToBeDeleted->data =
+          inorderSuccessorInfo->nodeToBeDeleted->data;
+      deleteNodeInfo = inorderSuccessorInfo;
+    }
+  }
+}
+
+void dettachFromParent(DeleteNodeInfo* deleteNodeInfo) {
+  if (deleteNodeInfo->parentOfNodeToBeDeleted == nullptr) {
+    return;
+  }
+  if (deleteNodeInfo->isLeft) {
+    deleteNodeInfo->parentOfNodeToBeDeleted->left = nullptr;
+  } else {
+    deleteNodeInfo->parentOfNodeToBeDeleted->right = nullptr;
+  }
+  delete deleteNodeInfo->nodeToBeDeleted;
+}
+
+// Rightmost node in left subtree
+DeleteNodeInfo* inorderPredecessorInLeftSubtree(BinaryTreeNode* startingNode) {
+  if (startingNode->left == nullptr) {
+    return nullptr;
+  }
+  BinaryTreeNode* parent = startingNode;
+  BinaryTreeNode* checking = startingNode->left;
+  bool isLeft = true;
+  while (checking->right != nullptr) {
+    parent = checking;
+    checking = checking->right;
+    isLeft = false;
+  }
+  return new DeleteNodeInfo(checking, parent, isLeft);
+}
+
+// Leftmost node in right subtree
+DeleteNodeInfo* inorderSuccessorInRightSubtree(BinaryTreeNode* startingNode) {
+  if (startingNode->right == nullptr) {
+    return nullptr;
+  }
+  BinaryTreeNode* parent = startingNode;
+  BinaryTreeNode* checking = startingNode->right;
+  bool isLeft = false;
+  while (checking->left != nullptr) {
+    parent = checking;
+    checking = checking->left;
+    isLeft = true;
+  }
+  return new DeleteNodeInfo(checking, parent, isLeft);
+}

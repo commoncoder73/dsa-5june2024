@@ -274,6 +274,39 @@ vector<vector<int>>* levelOrderTraversalSplittedByLevels(BinaryTreeNode* root) {
   return result;
 }
 
+vector<int>* levelOrderTraversalSplittedByLevels(BinaryTreeNode* root,
+                                                 int desiredLevel) {
+  vector<int>* result = new vector<int>();
+  if (root == nullptr) {
+    return result;
+  }
+  queue<BinaryTreeNode*> q;
+  q.push(root);
+  int currentLevel = 0;
+  while (!q.empty() && currentLevel <= desiredLevel) {
+    int levelSize = q.size();
+    while (levelSize > 0) {
+      BinaryTreeNode* firstNode = q.front();
+      q.pop();
+
+      if (currentLevel == desiredLevel) {
+        result->push_back(firstNode->data);
+      }
+
+      if (firstNode->left != nullptr) {
+        q.push(firstNode->left);
+      }
+      if (firstNode->right != nullptr) {
+        q.push(firstNode->right);
+      }
+      levelSize--;
+    }
+    currentLevel++;
+  }
+
+  return result;
+}
+
 vector<int>* rightView(BinaryTreeNode* root) {
   vector<int>* result = new vector<int>();
   if (root == nullptr) {
@@ -283,7 +316,7 @@ vector<int>* rightView(BinaryTreeNode* root) {
   q.push(root);
   while (!q.empty()) {
     int levelSize = q.size();
-    for (int i=0; i<levelSize; i++) {
+    for (int i = 0; i < levelSize; i++) {
       BinaryTreeNode* firstNode = q.front();
       q.pop();
 
@@ -305,43 +338,44 @@ vector<int>* rightView(BinaryTreeNode* root) {
 }
 
 vector<int>* leftViewRecursive(BinaryTreeNode* root) {
-    vector<int>* result = new vector<int>();
-    leftViewRecursive(root, result, 0, -1);
-    return result;
+  vector<int>* result = new vector<int>();
+  leftViewRecursive(root, result, 0, -1);
+  return result;
 }
 
-int leftViewRecursive(BinaryTreeNode* root, vector<int>* result, int height, int maxHeight) {
-    if (root == nullptr) {
-        return maxHeight;
-    }
-    if (height > maxHeight) {
-        result->push_back(root->data);
-        maxHeight = height;
-    }
-    maxHeight = leftViewRecursive(root->left, result, height + 1, maxHeight);
-    maxHeight = leftViewRecursive(root->right, result, height + 1, maxHeight);
+int leftViewRecursive(BinaryTreeNode* root, vector<int>* result, int height,
+                      int maxHeight) {
+  if (root == nullptr) {
     return maxHeight;
+  }
+  if (height > maxHeight) {
+    result->push_back(root->data);
+    maxHeight = height;
+  }
+  maxHeight = leftViewRecursive(root->left, result, height + 1, maxHeight);
+  maxHeight = leftViewRecursive(root->right, result, height + 1, maxHeight);
+  return maxHeight;
 }
 
 vector<int>* rightViewRecursive(BinaryTreeNode* root) {
-    vector<int>* result = new vector<int>();
-    rightViewRecursive(root, result, 0, -1);
-    return result;
+  vector<int>* result = new vector<int>();
+  rightViewRecursive(root, result, 0, -1);
+  return result;
 }
 
-int rightViewRecursive(BinaryTreeNode* root, vector<int>* result, int height, int maxHeight) {
-    if (root == nullptr) {
-        return maxHeight;
-    }
-    if (height > maxHeight) {
-        result->push_back(root->data);
-        maxHeight = height;
-    }
-    maxHeight = (root->left, result, height + 1, maxHeight);
-    maxHeight = (root->right, result, height + 1, maxHeight);
+int rightViewRecursive(BinaryTreeNode* root, vector<int>* result, int height,
+                       int maxHeight) {
+  if (root == nullptr) {
     return maxHeight;
+  }
+  if (height > maxHeight) {
+    result->push_back(root->data);
+    maxHeight = height;
+  }
+  maxHeight = rightViewRecursive(root->right, result, height + 1, maxHeight);
+  maxHeight = rightViewRecursive(root->left, result, height + 1, maxHeight);
+  return maxHeight;
 }
-
 
 vector<int>* leftView(BinaryTreeNode* root) {
   vector<int>* result = new vector<int>();
@@ -352,7 +386,7 @@ vector<int>* leftView(BinaryTreeNode* root) {
   q.push(root);
   while (!q.empty()) {
     int levelSize = q.size();
-    for (int i=0; i<levelSize; i++) {
+    for (int i = 0; i < levelSize; i++) {
       BinaryTreeNode* firstNode = q.front();
       q.pop();
 
