@@ -1,5 +1,6 @@
 package com.commoncoder.learn.dsa.tree;
 
+import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class BstBasics {
