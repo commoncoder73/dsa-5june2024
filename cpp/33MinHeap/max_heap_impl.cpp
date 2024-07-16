@@ -2,14 +2,14 @@
 
 using namespace std;
 
-class MinHeap {
+class MaxHeap {
  public:
-  MinHeap(int heapCapacity) {
+  MaxHeap(int heapCapacity) {
     this->heapArray = new int[heapCapacity];
     this->heapSize = 0;
   }
 
-  MinHeap(int* heapArray, int heapSize) {
+  MaxHeap(int* heapArray, int heapSize) {
     this->heapArray = heapArray;
     this->heapSize = heapSize;
     buildHeap();
@@ -22,7 +22,7 @@ class MinHeap {
     return heapArray[0];
   }
 
-  void printHeap() {
+   void printHeap() {
     for (int i = 0; i < heapSize; i++) {
       cout << heapArray[i] << " ";
     }
@@ -51,25 +51,25 @@ class MinHeap {
   // SC: O(logN) because of recursion
   // SC: O(1) in iterative way
   void heapify(int index) {
-    int minValueIndex = index;
+    int maxValueIndex = index;
 
     while (index < heapSize) {
       int leftChildIndex = left(index);
       int rightChildIndex = right(index);
 
       if (leftChildIndex < heapSize &&
-          heapArray[leftChildIndex] < heapArray[minValueIndex]) {
-        minValueIndex = leftChildIndex;
+          heapArray[leftChildIndex] > heapArray[maxValueIndex]) {
+        maxValueIndex = leftChildIndex;
       }
 
       if (rightChildIndex < heapSize &&
-          heapArray[rightChildIndex] < heapArray[minValueIndex]) {
-        minValueIndex = rightChildIndex;
+          heapArray[rightChildIndex] > heapArray[maxValueIndex]) {
+        maxValueIndex = rightChildIndex;
       }
 
-      if (minValueIndex != index) {
-        swap(minValueIndex, index);
-        index = minValueIndex;
+      if (maxValueIndex != index) {
+        swap(maxValueIndex, index);
+        index = maxValueIndex;
       } else {
         break;
       }
@@ -89,7 +89,7 @@ class MinHeap {
 
 int main() {
     int arr[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7};
-    MinHeap* minHeap = new MinHeap(arr, 12);
-    minHeap->printHeap();
+    MaxHeap* maxHeap = new MaxHeap(arr, 12);
+    maxHeap->printHeap();
     return 0;
 }
