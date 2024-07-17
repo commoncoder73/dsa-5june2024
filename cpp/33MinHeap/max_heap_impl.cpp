@@ -7,11 +7,13 @@ class MaxHeap {
   MaxHeap(int heapCapacity) {
     this->heapArray = new int[heapCapacity];
     this->heapSize = 0;
+    this->heapCapacity = heapCapacity;
   }
 
-  MaxHeap(int* heapArray, int heapSize) {
+  MaxHeap(int* heapArray, int heapSize, int heapCapacity) {
     this->heapArray = heapArray;
     this->heapSize = heapSize;
+    this->heapCapacity = heapCapacity;
     buildHeap();
   }
 
@@ -22,20 +24,61 @@ class MaxHeap {
     return heapArray[0];
   }
 
-   void printHeap() {
+  void printHeap() {
     for (int i = 0; i < heapSize; i++) {
       cout << heapArray[i] << " ";
     }
     cout << endl;
   }
 
-  // addNewValue
-  // deleteByIndex
-  // removeMin
+  // TC: O(logN)
+  // SC: O(1)
+  void add(int newValue) {
+    if (heapSize == heapCapacity) {
+      throw runtime_error("Heap is full!");
+    }
+    heapSize++;
+    int index = heapSize - 1;
+    heapArray[index] = newValue;
+    while (index > 0 && heapArray[parent(index)] < heapArray[index]) {
+      swap(parent(index), index);
+      index = parent(index);
+    }
+  }
+
+  // TC: O(logN)
+  // SC: O(1)
+  int deleteByIndex(int indexToDelete) {
+    if (!(0 <= indexToDelete && indexToDelete < heapSize)) {
+      throw runtime_error("Valid index to delete not provided!");
+    }
+    int valToDelete = heapArray[indexToDelete];
+    swap(indexToDelete, heapSize - 1);
+    heapArray[heapSize - 1] = 0;  // optionally
+    heapSize--;
+    heapify(indexToDelete);
+  }
+
+  // TC: O(logN)
+  // SC: O(1)
+  int removeMax() {
+    // we know index of max value in min heap and that is 0
+    // We also know how to delete value by its index. deleteByIndex
+    return deleteByIndex(0);
+  }
+
+  int size() {
+    return heapSize;
+  }
+
+  bool isEmpty() {
+    return size() == 0;
+  }
 
  private:
   int* heapArray;
   int heapSize;
+  int heapCapacity;
 
   // TC: O(N) (This is closer bound)
   // SC: O(logN) because of recursion
@@ -88,8 +131,9 @@ class MaxHeap {
 };
 
 int main() {
-    int arr[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7};
-    MaxHeap* maxHeap = new MaxHeap(arr, 12);
-    maxHeap->printHeap();
-    return 0;
+  int arr[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7, 0};
+  MaxHeap* maxHeap = new MaxHeap(arr, 12, 13);
+  maxHeap->add(100);
+  maxHeap->printHeap();
+  return 0;
 }

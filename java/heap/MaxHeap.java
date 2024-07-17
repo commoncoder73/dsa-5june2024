@@ -1,28 +1,25 @@
 package heap;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-public class MinHeap {
+public class MaxHeap {
 
     private int[] heapArray;
     // capacity of this heap = heapArray.length
     private int heapSize;
 
-    MinHeap(int initialCapacity) {
+    MaxHeap(int initialCapacity) {
         this.heapArray = new int[initialCapacity];
         this.heapSize = 0;
     }
 
-    MinHeap(int[] heapArray, int heapSize) {
+    MaxHeap(int[] heapArray, int heapSize) {
         this.heapArray = heapArray;
         this.heapSize = heapSize;
         buildHeap();
     }
 
-    public int getMin() {
+    public int getMax() {
         if (heapSize <= 0) {
             throw new RuntimeException("Heap is empty!");
         }
@@ -39,7 +36,7 @@ public class MinHeap {
         int indexOfAddingNewNode = heapSize - 1;
         heapArray[indexOfAddingNewNode] = newValue; // O(1)
         while (indexOfAddingNewNode > 0 &&
-                heapArray[indexOfAddingNewNode] < heapArray[parent(indexOfAddingNewNode)]) {
+                heapArray[indexOfAddingNewNode] > heapArray[parent(indexOfAddingNewNode)]) {
             swap(indexOfAddingNewNode, parent(indexOfAddingNewNode));
             indexOfAddingNewNode = parent(indexOfAddingNewNode);
         }
@@ -60,20 +57,12 @@ public class MinHeap {
     }
 
     // TC: O(logN) SC: O(1)
-    public int removeMin() {
+    public int removeMax() {
         return deleteByIndex(0);
     }
 
     public void print() {
         System.out.println(Arrays.toString(heapArray));
-    }
-
-    public int size() {
-        return heapSize;
-    }
-
-    public boolean isEmpty() {
-        return size() == 0;
     }
 
 
@@ -90,20 +79,20 @@ public class MinHeap {
     // Heapify ith node. This means compare it with children and find min values recursively.
     // TC: O(logN)
     private void heapify(int i) {
-        int minimumValueIndex = i; // assume ith index has the minimum
+        int maximumValueIndex = i; // assume ith index has the minimum
         while (i < heapSize) {
             int leftChildIndex = left(i);
             int rightChildIndex = right(i);
-            if (leftChildIndex < heapSize && heapArray[leftChildIndex] < heapArray[minimumValueIndex]) {
-                minimumValueIndex = leftChildIndex;
+            if (leftChildIndex < heapSize && heapArray[leftChildIndex] > heapArray[maximumValueIndex]) {
+                maximumValueIndex = leftChildIndex;
             }
-            if (rightChildIndex < heapSize && heapArray[rightChildIndex] < heapArray[minimumValueIndex]) {
-                minimumValueIndex = rightChildIndex;
+            if (rightChildIndex < heapSize && heapArray[rightChildIndex] > heapArray[maximumValueIndex]) {
+                maximumValueIndex = rightChildIndex;
             }
 
-            if (minimumValueIndex != i) {
-                swap(i, minimumValueIndex);
-                i = minimumValueIndex; // recursion - SC: O(logN) // without recursion: O(1)
+            if (maximumValueIndex != i) {
+                swap(i, maximumValueIndex);
+                i = maximumValueIndex; // recursion - SC: O(logN) // without recursion: O(1)
             } else {
                 break;
             }
@@ -132,22 +121,10 @@ public class MinHeap {
 
     public static void main(String[] args) {
         int[] arr = new int[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7, 0};
-        MinHeap minHeap = new MinHeap(arr, 12);
+        MaxHeap minHeap = new MaxHeap(arr, 12);
         minHeap.print();
-        minHeap.add(2);
+        minHeap.add(200);
         minHeap.print();
-    }
-
-    // TC: O(NlogN)
-    // SC: O(N)
-    public static void heapSort() {
-        int[] arr = new int[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7, 0};
-        MinHeap minHeap = new MinHeap(arr, 12); // O(N)
-        List<Integer> sortedNums = new ArrayList<>();
-        while (!minHeap.isEmpty()) { //N
-            sortedNums.add(minHeap.removeMin()); //logN
-        }// ONlogN
-        System.out.println(sortedNums);
     }
 
 

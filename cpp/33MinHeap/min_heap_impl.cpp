@@ -7,11 +7,13 @@ class MinHeap {
   MinHeap(int heapCapacity) {
     this->heapArray = new int[heapCapacity];
     this->heapSize = 0;
+    this->heapCapacity;
   }
 
-  MinHeap(int* heapArray, int heapSize) {
+  MinHeap(int* heapArray, int heapSize, int heapCapacity) {
     this->heapArray = heapArray;
     this->heapSize = heapSize;
+    this->heapCapacity;
     buildHeap();
   }
 
@@ -29,13 +31,54 @@ class MinHeap {
     cout << endl;
   }
 
-  // addNewValue
-  // deleteByIndex
-  // removeMin
+  // TC: O(logN)
+  // SC: O(1)
+  void add(int newValue) {
+    if (heapSize == heapCapacity) {
+      throw runtime_error("Heap is full!");
+    }
+    heapSize++;
+    int index = heapSize - 1;
+    heapArray[index] = newValue;
+    while (index > 0 && heapArray[parent(index)] > heapArray[index]) {
+      swap(parent(index), index);
+      index = parent(index);
+    }
+  }
+
+  // TC: O(logN)
+  // SC: O(1)
+  int deleteByIndex(int indexToDelete) {
+    if (!(0 <= indexToDelete && indexToDelete < heapSize)) {
+      throw runtime_error("Valid index to delete not provided!");
+    }
+    int valToDelete = heapArray[indexToDelete];
+    swap(indexToDelete, heapSize - 1);
+    heapArray[heapSize - 1] = 0;  // optionally
+    heapSize--;
+    heapify(indexToDelete);
+  }
+
+// TC: O(logN)
+  // SC: O(1)
+  int removeMin() {
+    // we know index of min value in min heap and that is 0
+    // We also know how to delete value by its index. deleteByIndex
+    return deleteByIndex(0);
+  }
+
+  int size() {
+    return heapSize;
+  }
+
+  bool isEmpty() {
+    return size() == 0;
+  }
 
  private:
   int* heapArray;
   int heapSize;
+  int heapCapacity;
 
   // TC: O(N) (This is closer bound)
   // SC: O(logN) because of recursion
@@ -88,8 +131,10 @@ class MinHeap {
 };
 
 int main() {
-    int arr[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7};
-    MinHeap* minHeap = new MinHeap(arr, 12);
-    minHeap->printHeap();
-    return 0;
+  int arr[]{25, 20, 11, 15, 13, 12, 15, 19, 9, 8, 7, 7, 0, 0};
+  MinHeap* minHeap = new MinHeap(arr, 12, 14);
+  minHeap->add(9);
+  minHeap->add(-1);
+  minHeap->printHeap();
+  return 0;
 }
